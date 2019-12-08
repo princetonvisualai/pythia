@@ -16,14 +16,18 @@ class TaskLoader:
         self.config = config
 
     def load_task(self):
+
+        # INSERT CODE
         self.train_task = MultiTask("train", self.config)
         self.val_task = MultiTask("val", self.config)
         self.test_task = MultiTask("test", self.config)
+        self.verify_task = MultiTask("verify", self.config)
 
         self.mapping = {
             "train": self.train_task,
             "val": self.val_task,
             "test": self.test_task,
+            "verify": self.verify_task,
         }
 
         self.test_reporter = None
@@ -99,6 +103,17 @@ class TaskLoader:
             **other_args
         )
         self.test_loader.dataset_type = "test"
+
+        # INSERT CODE
+        self._add_extra_args_for_dataloader(self.verify_task, other_args)
+        self.verify_loader = DataLoader(
+            dataset=self.verify_task,
+            pin_memory=pin_memory,
+            collate_fn=BatchCollator(),
+            num_workers=num_workers,
+            **other_args
+        )
+        self.val_loader.dataset_type = "verify"
 
         self.use_cuda = "cuda" in self.config.training_parameters.device
 

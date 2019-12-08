@@ -22,6 +22,8 @@ task_attributes:
         - imdb/imdb_val2train2014.npy
         imdb_file_val:
         - imdb/imdb_minival2014.npy
+        imdb_file_verify:
+        - imdb/imdb_verify2014.npy
         question_max_len: 14
         vocab_answer_file: answers_vqa.txt
         vocab_question_file: vocabulary_vqa.txt

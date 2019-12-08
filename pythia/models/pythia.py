@@ -11,6 +11,12 @@ from pythia.modules.layers import (ClassifierLayer, ModalCombineLayer,
                                    ReLUWithWeightNormFC)
 from pythia.utils.configuration import ConfigNode
 
+# INSERT CODE
+import datetime
+import json
+import pandas as pd
+import numpy as np
+
 
 @registry.register_model("pythia")
 class Pythia(BaseModel):
@@ -293,6 +299,22 @@ class Pythia(BaseModel):
         )
 
         model_output = {"scores": self.calculate_logits(joint_embedding)}
+
+        # INSERT CODE
+        target_dir = '/n/fs/visualai-scr/gmccord/pythia/save/vqa_vqa2_pythia/reports/'
+        with open(target_dir + 'test_file.txt', 'a') as f:
+            f.write('Start: %s\n' % datetime.datetime.now())
+        scores = model_output["scores"]
+        scores = torch.nn.functional.softmax(scores, dim=1)
+        actual, indices = scores.topk(5, dim=1)
+
+        with open(target_dir + './actual.csv', 'w') as f:
+            pd.DataFrame(actual.data.cpu().numpy()).to_csv(f, index=False,header=False)
+        with open(target_dir + './indices.csv', 'w') as f:
+            pd.DataFrame(indices.data.cpu().numpy()).to_csv(f, index=False,header=False)
+
+        with open(target_dir + 'test_file.txt', 'a') as f:
+            f.write('End: %s\n' % datetime.datetime.now())
 
         return model_output
 

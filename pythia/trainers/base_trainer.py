@@ -420,6 +420,10 @@ class BaseTrainer:
         if "inference" in self.run_type or "predict" in self.run_type:
             self._inference_run("test")
 
+        # INSERT CODE
+        if "verify" in self.run_type:
+            self._inference_run("verify")
+
     def _inference_run(self, dataset_type):
         if self.config.training_parameters.evalai_inference is True:
             self.predict_for_evalai(dataset_type)
